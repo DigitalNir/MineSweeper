@@ -1,0 +1,59 @@
+* {
+  box-sizing: border-box;
+}
+
+/* .board-container {
+  width: 500px;
+  margin: 0 auto;
+} */
+
+table {
+  /* width: 100%; */
+  margin: 0 auto;
+  border-collapse: collapse;
+  /* border-collapse: separate; */
+  /* table-layout: fixed; */
+  /* border-spacing: 0; */
+
+  /* max-width: 100%; Adjust the width as needed */
+}
+
+table {
+  padding: 1px;
+}
+
+td {
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  margin: 0; /* Remove margin if you want cells to be close to each other */
+  border: 1px solid #7b7b7b; /* Lighter border color for the top-left edge */
+  background-color: #bebebe; /* Color of the button */
+  text-align: center;
+  vertical-align: middle;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2),
+    /* Shadow on the bottom and right side */ 2px 2px 5px rgba(0, 0, 0, 0.2),
+    /* Slightly larger shadow for depth */ inset 1px 1px 0px
+      rgba(255, 255, 255, 0.5),
+    /* Inner shadow for the top-left edge */ inset -1px -1px 0px
+      rgba(0, 0, 0, 0.4); /* Inner shadow for the bottom-right edge */
+  user-select: none; /* Prevent text selection */
+}
+
+td:active {
+  border: 1px solid #7b7b7b; /* Same border color */
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+    /* Inner shadow to give pressed effect */ inset -1px -1px 0px
+      rgba(255, 255, 255, 0.5); /* Inner highlight for the bottom-right edge */
+}
+
+.shown {
+  border: 1px solid #7b7b7b; /* Same border color */
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+    /* Inner shadow to give pressed effect */ inset -1px -1px 0px
+      rgba(255, 255, 255, 0.5); /* Inner highlight for the bottom-right edge */
+}
+
+footer {
+  text-align: center;
+}

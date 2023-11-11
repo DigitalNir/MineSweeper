@@ -7,16 +7,20 @@ let gLevels = {
 }
 
 let gGame = {
-  chosenLevel: 'BEGINNER',
+  chosenLevel: 'MEDIUM',
   isOn: false,
   shownCount: 0,
   markedCount: 0,
   startTime: 0,
   secsPassed: 0,
   lives: 2,
+  isHintOn: false,
+  hintStatus: { isHintOn: false, id: 0, elHint: null },
+  hasUsedHint: false,
 }
 let gFirstClickDone = { status: false, pos: { i: 0, j: 0 } }
 let gTimerInterval = 0
+let gHintTimeout = 0
 
 const MINE = '💣'
 const EXPLOSION = '💥'
@@ -142,10 +146,47 @@ function addRandomMines(board, firstClickPos) {
   return board
 }
 
+function blowRandomMines(board, numMinesToBlow) {
+  let countMinesBlown = 0
+
+  while (countMinesBlown < numMinesToBlow) {
+    let randRowIdx = getRandomInt(0, gLevels[gGame.chosenLevel].SIZE)
+    let randColIdx = getRandomInt(0, gLevels[gGame.chosenLevel].SIZE)
+    let currCell = board[randRowIdx][randColIdx]
+
+    if (!currCell.isMine) {
+      continue
+    }
+
+    currCell.isMine = false
+    countMinesBlown++
+    // console.log('Mine blown at: ', randRowIdx, randColIdx)
+  }
+  return board
+}
+
 function onCellClicked(elCell, i, j) {
   const currCell = gBoard[i][j]
 
   if (currCell.isShown) return // Ignore clicks on a Shown cell
+
+  if (gGame.hintStatus.isHintOn && gGame.hasUsedHint) return
+
+  if (gGame.hintStatus.isHintOn) {
+    clearTimeout(gHintTimeout)
+    gHintTimeout = 0
+    console.log('Hint mode - Revealing cells ')
+    revealSomeCells(gBoard, elCell, i, j)
+    gGame.hasUsedHint = true
+    gHintTimeout = setTimeout(() => {
+      console.log('Hint mode - hiding cells')
+      hideSomeCells(gBoard, elCell, i, j)
+      gGame.hintStatus.isHintOn = false
+      gGame.hasUsedHint = false
+      gGame.hintStatus.elHint.style.display = 'none'
+    }, 1000)
+    return
+  }
 
   if (currCell.isMine) {
     // Clicked on a mine - decrease Lives, increase shownCount and check if GameOver
@@ -177,6 +218,8 @@ function onCellMarked(elCell, ev, i, j) {
   ev.preventDefault() // Prevent the default context menu from appearing
 
   if (currCell.isShown) return // Ignore attempts to mark a Shown cell
+
+  if (gGame.hintStatus.isHintOn && gGame.hasUsedHint) return
 
   if (currCell.isMarked) {
     // Remove a Mark from an already Marked cell and update counters
@@ -218,61 +261,6 @@ function checkVictory(elCell) {
   return false
 }
 
-function handleHighScore() {
-  const elScoreModal = document.querySelector('.score-modal')
-  const elScoreModalHeadings = document.querySelectorAll('.score-modal h2 span')
-
-  // console.log('High Score!')
-  elScoreModal.classList.remove('hidden')
-  elScoreModal.style.display = 'block'
-  console.log(elScoreModal)
-
-  // Using a Key Map obj - Key is Level, Value is Score
-  // highScore = {EXPERT: 10}
-  // highScore = {Beginner: 15}
-
-  const localStorageScoreStr = localStorage.getItem('highScore')
-  const parsedJSON = JSON.parse(localStorageScoreStr)
-
-  // Initialize levelScoreMap as an empty object if localStorageHighScoreStr is null
-  const levelScoreMap = parsedJSON !== null ? parsedJSON : {}
-
-  // Use nullish coalescing operator (??) to handle null or undefined
-  const prevScore = levelScoreMap[gGame.chosenLevel] ?? Infinity
-
-  let msg = ''
-  let color = ''
-
-  console.log('prevScore:', prevScore)
-
-  // Check against Infinity because prevScore will never be null at this point
-  if (prevScore === Infinity || gGame.secsPassed < prevScore) {
-    levelScoreMap[gGame.chosenLevel] = gGame.secsPassed
-    const currScore = JSON.stringify(levelScoreMap)
-    localStorage.setItem('highScore', currScore)
-    console.log(
-      `Added currScore: ${currScore}, which is BETTER than prevScore ${prevScore} `
-    )
-
-    msg = prevScore === Infinity ? "You're first!" : 'You Rock!'
-    color = 'green'
-  } else {
-    // If we're here it means that gGame.secsPassed is worse than prevScore
-    console.log(
-      `DID NOT add gGame.secsPassed: ${gGame.secsPassed}, which is WORSE than prevScore ${prevScore} `
-    )
-
-    msg = 'You Suck!'
-    color = 'red'
-  }
-  elScoreModalHeadings[0].innerText = msg
-  elScoreModalHeadings[1].innerText = gGame.secsPassed
-  elScoreModalHeadings[2].textContent =
-    prevScore !== Infinity ? prevScore : 'N/A'
-
-  elScoreModalHeadings[0].style.color = color
-}
-
 function renderCounters() {
   const elShownCount = document.querySelector('.shown-count')
   const elMarkedCount = document.querySelector('.marked-count')
@@ -280,46 +268,4 @@ function renderCounters() {
   //   console.log('Render Counters - gGame.markedCount:', gGame.markedCount)
   elShownCount.querySelector('span').innerText = gGame.shownCount
   elMarkedCount.querySelector('span').innerText = gGame.markedCount
-}
-
-function revealAllCells(board) {
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      // Model - Set each cell to shown
-      let currCell = board[i][j]
-      currCell.isShown = true
-    }
-  }
-  // DOM - After updating the model, re-render the board to show the changes
-  renderBoard(board)
-}
-
-function expandShown(board, elCell, i, j) {
-  const negsLocs = getNegsWithoutItems(board, i, j)
-  console.log(negsLocs)
-  for (let negLoc of negsLocs) {
-    const currCell = board[negLoc.i][negLoc.j]
-    currCell.isShown = true
-    gGame.shownCount++
-
-    console.log('currCell:', currCell)
-    const selector = `[data-i="${negLoc.i}"][data-j="${negLoc.j}"]`
-    console.log(selector)
-    const elNeg = document.querySelector(selector)
-    elNeg.classList.add('shown')
-  }
-}
-
-function startTimer() {
-  gGame.startTime = Date.now()
-
-  clearInterval(gTimerInterval)
-  gTimerInterval = 0
-
-  gTimerInterval = setInterval(() => {
-    let elaspedTime = Date.now() - gGame.startTime
-    const elTimer = document.querySelector('.timer span')
-    gGame.secsPassed = parseInt(elaspedTime / 1000) // Update Model
-    elTimer.innerHTML = parseInt(elaspedTime / 1000) // Update Dom
-  }, 1000)
 }

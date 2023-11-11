@@ -34,7 +34,9 @@ body {
 }
 
 h1 {
+  font-size: 3em;
   text-align: center;
+  text-shadow: 5px 5px 5px rgb(4, 37, 25);
 }
 
 footer {
@@ -51,10 +53,16 @@ table,
   margin-bottom: 25px;
   padding: 1px;
   text-align: center;
-  max-width: 800px;
+  max-width: 700px;
+}
+
+table {
+  background-color: grey;
+  border: 2px solid black;
 }
 
 .smiley-bar {
+  max-width: 600px;
   margin-top: 10px;
   padding-top: 10px;
   background-color: slateblue;
@@ -63,16 +71,28 @@ table,
   border-radius: 20px;
 }
 
+.img-hint,
+.img-exterminator {
+  width: 50px;
+  height: 50px;
+  padding-right: 3px;
+  padding-bottom: 1px;
+  vertical-align: middle;
+}
+
 td,
 .btn-smiley,
 .timer,
-.lives-count {
+.lives-count,
+.btn-hint,
+.btn-exterminator {
   display: inline-block;
   font-size: 1.5em;
   width: 50px;
   height: 50px;
   padding: 10px;
   margin: 0;
+  margin-right: 5px;
   border: 1px solid var(--border-color);
   background-color: var(--button-bgcolor);
   text-align: center;
@@ -85,10 +105,15 @@ td:active,
 .btn-smiley:active,
 .shown {
   border: 1px solid var(--border-color);
+  background-color: #d3d3d3;
   box-shadow: var(--button-shadow-active);
 }
 
+.btn-smiley:hover {
+  transform: scale(120%);
+}
 td {
+  margin: 0;
   cursor: pointer;
 }
 
@@ -96,6 +121,14 @@ td {
   padding: 0;
   cursor: pointer;
   border-radius: 50%;
+}
+
+.btn-hint,
+.btn-exterminator {
+  padding: 0;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
 }
 
 .timer {
@@ -155,27 +188,10 @@ select {
   cursor: pointer;
 }
 
-.options-modal {
+.options-modal,
+.score-modal {
   position: fixed;
 
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  height: auto;
-  padding: 50px;
-  background-color: var(--modal-bgcolor);
-  box-shadow: 0 4px 8px var(--modal-shadow-color);
-  border-radius: 15px;
-  opacity: 0.9;
-  text-align: center;
-  font-weight: bolder;
-  /* z-index: 1000; */
-}
-
-.options-modal {
-  position: fixed;
-  /* display: none; */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -197,13 +213,22 @@ select {
   height: 400px;
 }
 
-.score-modal {
-  /* display: block; */
-  /* z-index: 1000; */
+.mode-text {
+  text-shadow: 2.5px 2.5px 2.5px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  transition: 1s;
 }
 
+.shown-count,
+.marked-count {
+  font-size: 1em;
+}
 footer {
   bottom: 0;
   position: fixed;
   font-size: 1.5em;
+}
+
+button {
+  font-family: Quantico, sans-serif;
 }

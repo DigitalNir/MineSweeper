@@ -7,52 +7,72 @@
     <title>MineSweeper</title>
   </head>
   <body onload="onInit()">
-  <h1>💣 MineSweeper 💣
-  </h1>
-    <div class="features-container">
-      <h2 class="shown-count">Shown Count: <span></span></h2>
-      <h2 class="marked-count">Marked Count: <span></span></h2>
-      <button class="btn-show-option" onclick="toggleOptionsModal()"> Options</button>
-      
-    </div>
+    <h1>💣 MineSweeper 💣</h1>
+    <button class="btn-show-option" onclick="toggleOptionsModal()">
+      Options
+    </button>
+
     <main>
-    <div class="smiley-bar">
-    <h2 class="lives-count">Lives: <span></span></h2>
-    <button class="btn-smiley" onclick="onInit()">😃</button>
-    <h2 class="timer">Time: <span></span></h2>
-  </div>
-    <table>
-      <tbody></tbody>
-    </table>
-  </main>
-   <aside>
-    <div class="options-modal hidden"  >
-      <button class="btn btn-modal" onclick="closeModal(this)">X</button>
-      <div class="level-select-header"> Select Level:
-        <select id="level-select" onchange="onChangeLevel(this.value)">
-          <option value="BEGINNER">Beginner</option>
-          <option value="MEDIUM">Medium</option>
-          <option value="EXPERT">Expert</option>
-        </select>
-       <div class="dark-mode">
-        <label class="switch">
-          <input type="checkbox" id="mode-toggle" onchange="toggleDarkMode(this)" >
-          <span class="mode-text"></span><span> Mode</span>
-        </label>
-       </div>
-    </div>
-    <div class="score-modal hidden">
-      <button class="btn btn-modal" onclick="closeModal(this)">X</button>
-      <h2 class="score-msg">Guess what? <span></span></h2>
-      <h2 class="score-current">Your Current Score: <span></span></h2>
-      <h2 class="score-previous">Previous Highest Score: <span></span></h2>
-    </div>
-  </aside>
-  <footer>Nir Cohen © 2023</footer>
+      <div class="smiley-bar">
+        <button
+          class="btn-exterminator"
+          title="Mine Exterminator"
+          onclick="onExterminator(this)"
+        >
+          <img class="img-hint" src="img/exterminator.png" alt="exterminator" />
+        </button>
+        <button class="btn-hint" title="Hint" onclick="onHint(this)">
+          <img class="img-hint" src="img/hint.png" alt="hint" />
+        </button>
+        <h2 class="lives-count">Lives: <span></span></h2>
+        <button class="btn-smiley" onclick="onInit()">😃</button>
+        <h2 class="timer">Time: <span></span></h2>
+        <button class="btn-hint" title="Hint" onclick="onHint(this)">
+          <img class="img-hint" src="img/hint.png" alt="hint" />
+        </button>
+      </div>
+      <table>
+        <tbody></tbody>
+      </table>
+      <div class="features-container">
+        <h2 class="shown-count">Shown Count: <span></span></h2>
+        <h2 class="marked-count">Marked Count: <span></span></h2>
+      </div>
+    </main>
+    <aside>
+      <div class="options-modal hidden">
+        <button class="btn btn-modal" onclick="closeModal(this)">X</button>
+        <div class="level-select-header">
+          Select Level:
+          <select id="level-select" onchange="onChangeLevel(this.value)">
+            <option value="BEGINNER">Beginner</option>
+            <option value="MEDIUM" selected>Medium</option>
+            <option value="EXPERT">Expert</option>
+          </select>
+        </div>
+        <div class="dark-mode">
+          <label class="switch">
+            <input
+              type="checkbox"
+              id="mode-toggle"
+              onchange="toggleDarkMode(this)"
+            />
+            <span>Dark Mode</span><span><br />Current Mode:</span
+            ><span class="mode-text">🌞</span>
+          </label>
+        </div>
+      </div>
+      <div class="score-modal hidden">
+        <button class="btn btn-modal" onclick="closeModal(this)">X</button>
+        <h2 class="score-msg">Guess what? <span></span></h2>
+        <h2 class="score-current">Your Current Score: <span></span></h2>
+        <h2 class="score-previous">Previous Highest Score: <span></span></h2>
+      </div>
+    </aside>
+    <footer>Nir Cohen © 2023</footer>
     <script src="js/utils.js"></script>
     <script src="js/debug.js"></script>
     <script src="js/options.js"></script>
     <script src="js/game.js"></script>
-   
   </body>
 </html>
